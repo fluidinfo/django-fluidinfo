@@ -1,6 +1,5 @@
 import unittest
 import models
-import fields
 import forms
 from django import forms as django_forms
 

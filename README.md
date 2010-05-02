@@ -2,7 +2,7 @@ django-fluiddb
 ==============
 
 (c) FluidInfo 2010
-info@fluidinfo.com
+dev@fluidinfo.com
 
 License: New BSD License
 
@@ -35,11 +35,16 @@ function in a similar fashion to the traditional Django ModelForms:
             class Meta:
                     model = Foo
 
+Take a look in the django_fluiddb/tests.py file for example usage. Expect more 
+comprehensive documentation very soon.
+
 While this doesn't reflect the dynamic nature of FluidDB's schema I'd like to
 point out that my aim is to give Djangonaughts a familiar "no brainer" route 
 to using FluidDB.
 
 I expect them to dig into FOM once they grok what FluidDB is about. ;-)
+
+Comments and feedback most welcome!
 
 (An introductory presentation can be 
 [found here](http://www.slideshare.net/ntoll/an-introduction-to-fluiddb-a-social-database-in-the-cloud))
