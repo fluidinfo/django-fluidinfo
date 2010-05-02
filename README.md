@@ -21,10 +21,8 @@ do the following:
         from django_fluiddb import models 
         
         class foo(models.Model):
-            bar = models.TagField('test/namespace/bar_tag', _('A bar'),
-                    help_text=_('Some help text'))
-            baz = models.TagField('test/namespace/baz_tag', 
-                    _('Some baz'), help_text=_('Enter a number'))
+            bar = models.CharField('test/namespace/bar_tag')
+            baz = models.IntegerField('test/namespace/baz_tag') 
 
 These models can then be used with specially created ModelForms that
 function in a similar fashion to the traditional Django ModelForms:
