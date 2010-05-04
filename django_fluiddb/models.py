@@ -1,5 +1,5 @@
 """
-Simply wraps and inherits from Ali Afshar's FOM classes so they appear more 
+Wraps and inherits from Ali Afshar's FOM classes so they appear more 
 Django-esque.
 
 Djangonaughts are used to defining models like this:
@@ -19,7 +19,8 @@ class foo(models.Model):
     baz = models.TagField('test/namespace/baz_tag') 
 
 The "name" of the field on the forms will be the name of the attribute, the 
-help_text will be the referenced tag's "description" from within FluidDB.
+help_text will be the referenced tag's "description" from within FluidDB (to be
+implemented).
 
 These "models" can then be used with the ModelForms defined in forms.py so
 they work like the classic Django models.ModelForm:
@@ -51,23 +52,23 @@ class ModelBase(type):
             # if this isn't a subclass of Model then don't do anything special
             return super_new(cls, name, bases, attrs)
 
-        
         # We want to be able to store away the field names and tags so the form
         # class can make use of them later
         fields = {}
-        local_fields = []
+        ordered_fields = []
         for field, tag in attrs.items():
             if isinstance(tag, tag_value):
                 fields[field] = tag
-                local_fields.append(field)
-        local_fields.reverse()
+                ordered_fields.append(field)
+        ordered_fields.reverse()
 
-        attrs['fields'] = fields
-        attrs['local_fields'] = local_fields
+        # dictionary of tag names : tag values
+        attrs['fields'] = fields 
+        # ordered list of the fields - in order they're declared in code
+        attrs['ordered_fields'] = ordered_fields 
 
         # Create the new class
         new_class = super_new(cls, name, bases, attrs)
-
         return new_class
 
 class Model(Object):
@@ -82,27 +83,42 @@ class Model(Object):
 # means that the forms classes can work out how to display the related fields.
 
 class TagField(tag_value):
+    """
+    Represents a generic tag with no specifically pre-defined type
+    """
     @property
     def field_type(self):
         # Default 
         return str
 
 class CharField(tag_value):
+    """
+    A tag that should contain a FluidDB "string" primitive type
+    """
     @property
     def field_type(self):
         return str
 
 class IntegerField(tag_value):
+    """
+    A tag that should contain a FluidDB integer primitive type
+    """
     @property
     def field_type(self):
         return int
 
 class FloatField(tag_value):
+    """
+    A tag that should contain a FluidDB float primitive type
+    """
     @property
     def field_type(self):
         return float
 
 class BooleanField(tag_value):
+    """
+    A tag that should contain a FluidDB boolean primitive type
+    """
     @property
     def field_type(self):
         return bool

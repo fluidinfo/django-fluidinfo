@@ -1,8 +1,20 @@
 """
-Helper functions and classes required for creating Form classes from FOM
+Helper functions and classes required for creating ModelForm classes from FOM
 Objects and tag_values (aliased as Models and *Fields)
 
-I've attempted to keep things as similar to what is found in django.forms
+I've attempted to keep things as similar to what is found in django.forms.
+
+To use the forms you should first define a model that inherits from 
+django_fluiddb.models.Model. Then, in forms.py:
+
+import django_fluiddb.forms
+
+class MyFluidDBModelForm(forms.ModelForm):
+    class Meta:
+        model = MyFluidDBModelClass 
+
+In fact, since the django_fluiddb.forms.ModelForm class inherits from Django's
+BaseForm class you can bespoke it like the regular ModelForm class.
 """
 from django import forms
 from django.utils.datastructures import SortedDict
@@ -22,29 +34,24 @@ FORM_TYPES = {
 
 def save_instance(form, instance, fields=None, fail_message='saved',
                   commit=True, exclude=None):
+    """
+    Iterates through the fields and saves them as tag-values against the 
+    instance object representing an object in FluidDB
+    """
     if form.errors:
         raise ValueError("The %s could not be %s because the data didn't"\
             " validate." % ('object', fail_message))
 
     cleaned_data = form.cleaned_data
 
-    for field_name in instance.local_fields:
+    for field_name in instance.ordered_fields:
         if fields and field_name not in fields:
             continue
         if exclude and field_name not in exclude:
             continue
-
         setattr(instance, field_name, cleaned_data[field_name])
 
     return instance
-
-def get_tag_from_path(path):
-    """
-    Given a full path will return the last element (tag name)
-
-    Given: "foo/bar/baz" will return "baz"
-    """
-    return path.split('/')[-1:]
 
 def model_to_dict(instance, fields=None, exclude=None):
     """
@@ -59,7 +66,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     "fields" argument.
     """
     data = {}
-    for f in instance.local_fields:
+    for f in instance.ordered_fields:
         if fields and not f in fields:
             continue
         if exclude and f in exclude:
@@ -77,6 +84,9 @@ def model_to_dict(instance, fields=None, exclude=None):
 
 def formfield_for_model_field(instance, field_name, 
         form_class=forms.FileField, **kwargs):
+    """
+    Returns the appropriate form field type for a named field in an instance
+    """
     field_type = instance.fields[field_name].field_type
     # Use FileField to represent the (default) opaque value on a form
     FormField = form_class
@@ -98,7 +108,7 @@ def fields_for_model(instance, fields=None, exclude=None, formfield_callback=Non
     """
     field_list = []
     ignored = []
-    for f in instance.local_fields:
+    for f in instance.ordered_fields:
         if fields and not f in fields:
             continue
         if exclude and not f in exclude:
@@ -117,6 +127,9 @@ def fields_for_model(instance, fields=None, exclude=None, formfield_callback=Non
     return field_dict
 
 class ModelFormOptions(object):
+    """
+    Basis for the _meta attribute
+    """
     def __init__(self, options=None):
         self.model = getattr(options, 'model', None)
         self.fields = getattr(options, 'fields', None)
@@ -148,6 +161,9 @@ class ModelFormMetaclass(type):
         return new_class
 
 class BaseModelForm(BaseForm):
+    """
+    All django-fluiddb model forms inherit capabilities from this class
+    """
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
                  initial=None, error_class=ErrorList, label_suffix=':', 
                  empty_permitted=True, instance=None):
@@ -170,5 +186,8 @@ class BaseModelForm(BaseForm):
                              commit, exclude=self._meta.exclude)
 
 class ModelForm(BaseModelForm):
+    """
+    All model forms must inherit from this class
+    """
     __metaclass__ = ModelFormMetaclass
 

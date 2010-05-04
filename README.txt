@@ -46,3 +46,15 @@ Comments and feedback most welcome!
 
 (An introductory presentation can be 
 [found here](http://www.slideshare.net/ntoll/an-introduction-to-fluiddb-a-social-database-in-the-cloud))
+
+Thanks to...
+------------
+
+Ali Afshar - for creating FOM
+Terry Jones - for thinking up FluidDB
+Esteve Fernandez - for implementing FluidDB (with Terry)
+
+Contributors
+------------
+
+Nicholas Tollervey - original author of django-fluiddb

@@ -69,9 +69,9 @@ class ModelTest(unittest.TestCase):
         m.create()
         m.description = "this is the django_fluiddb test object"
         m.timestamp = 123456
-        # check we have an appropriate fields dictionary and local_fields list
+        # check we have an appropriate fields dictionary and ordered_fields list
         self.assertEqual(2, len(m.fields))
-        self.assertEqual(['description', 'timestamp'], m.local_fields)
+        self.assertEqual(['description', 'timestamp'], m.ordered_fields)
         # lets check we can extract the new values from FluidDB
         twin = Meeting(m.uid)
         self.assertEqual(m.description, twin.description)
