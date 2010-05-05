@@ -10,13 +10,13 @@ Bridging Django to FluidDB with FOM
 -----------------------------------
 
 The purpose of this package is to make it easy to use 
-[FOM](http://bitbucket.org/aafshar/fom-main/wiki/Home) to define models for
+`FOM <http://bitbucket.org/aafshar/fom-main/wiki/Home`_ to define models for
 Django based applications that need to make use of 
-[FluidDB](http://fluidinfo.com) as their database backend (instead of a
+`FluidDb <http://fluidinfo.com>`_ as their database backend (instead of a
 traditional relational database). 
 
 To read the full documentation make sure you have
-[Sphinx](http://sphinx.pocoo.org/) installed, change to the doc directory and
+`Sphinx <http://sphinx.pocoo.org/>` installed, change to the doc directory and
 type::
 
         make html
@@ -51,16 +51,16 @@ I expect them to dig into FOM once they grok what FluidDB is about. ;-)
 Comments and feedback most welcome!
 
 (An introductory presentation can be 
-[found here](http://www.slideshare.net/ntoll/an-introduction-to-fluiddb-a-social-database-in-the-cloud))
+`found here <http://www.slideshare.net/ntoll/an-introduction-to-fluiddb-a-social-database-in-the-cloud>`_)
 
 Thanks to...
 ------------
 
-Ali Afshar - for creating FOM
-Terry Jones - for thinking up FluidDB
-Esteve Fernandez - for implementing FluidDB (with Terry)
+* Ali Afshar - for creating FOM
+* Terry Jones - for thinking up FluidDB
+* Esteve Fernandez - for implementing FluidDB (with Terry)
 
 Contributors
 ------------
 
-Nicholas Tollervey - original author of django-fluiddb
+* Nicholas Tollervey - original author of django-fluiddb
