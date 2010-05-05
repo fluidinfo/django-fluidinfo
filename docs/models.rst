@@ -27,8 +27,8 @@ Within a Django application an instantiation of a particular model class is
 used to represent the data stored in a row in the table that was generated from
 that model.
 
-Models in django-fluiddb
-------------------------
+Defining Models with django-fluiddb
+-----------------------------------
 
 Due to the schema-less and *fluid* nature of FluidDB things are a bit different
 in django-fluiddb's models. Definitions generally look something like this::
