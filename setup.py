@@ -9,7 +9,7 @@ setup(
     url='http://fluidinfo.com/',
     license='LICENSE.txt',
     description='Provides a familiar interface for using FluidDB within Django projects',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     classifiers=['Development Status :: 3 - Alpha Development Status',
                  'Environment :: Web Environment', 
                  'Framework :: Django',

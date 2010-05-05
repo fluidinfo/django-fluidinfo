@@ -15,8 +15,14 @@ Django based applications that need to make use of
 [FluidDB](http://fluidinfo.com) as their database backend (instead of a
 traditional relational database). 
 
+To read the full documentation make sure you have
+[Sphinx](http://sphinx.pocoo.org/) installed, change to the doc directory and
+type::
+
+        make html
+
 It works by wrapping the FOM based classes in Django-esque classes so you can
-do the following:
+do the following::
 
         from django_fluiddb import models 
         
@@ -25,7 +31,7 @@ do the following:
             baz = models.IntegerField('test/namespace/baz_tag') 
 
 These models can then be used with specially created ModelForms that
-function in a similar fashion to the traditional Django ModelForms:
+function in a similar fashion to the traditional Django ModelForms::
 
         from django_fluiddb.forms import ModelForm
 

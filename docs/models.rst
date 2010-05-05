@@ -76,3 +76,111 @@ Here are the list of available field types (this will change / grow):
 Once the django_fluiddb models have been defined in fdb_models.py you should
 run ``python manage.py syncfluiddb`` to check that the required tags and 
 namespaces either exist or are created for you.
+
+Querying FluidDB
+----------------
+
+Once you've created your models you can use them to create, retrieve, update
+and delete information.
+
+It is important to remember that **all** objects in FluidDB are public and
+writeable. It is the tags, namespaces and tag-values that have permissions
+associated with them. Permissions can be set using FOM and a section on this
+will be added soon.
+
+To create an object onto which you want to add tags (fields) defined in a
+model you simply do something like this::
+
+    p = Person(about='An object representing the person Fred Blogs')
+    p.create()
+
+Notice that you can *optionally* set an ``about`` tag. This is just a convention
+to help indicate what the object might be about. It is a unique and public
+tag controlled by FluidDB itself (so you can't change the visibility or
+permissions on it).
+
+To create or update information / data tagged to an object simply do::
+
+    p.first_name = 'Fred'
+    p.last_name = 'Blogs'
+
+It is important to realise that a call is made to FluidDB at *exactly the
+point* in your code where you update the field's value. There is **no**
+``save()`` method on django-fluiddb models since the updates happen as they
+are declared in code.
+
+There are several ways to query and extract objects / information from FluidDB.
+
+Instantiate a model and pass in the object's uuid::
+
+    uid = u'f6d78cab-21dd-4cc6-98aa-6dd076d1f0e8' # example object uid
+    p = Person(uid)
+
+Instantiate a model and pass in the object's ``about`` tag value::
+
+    about_value = 'An object representing the person Fred Blogs'
+    p = Person(about=about_value)
+
+Query FluidDB to return objects that match search criteria::
+
+    results = Person.filter('my_app/contacts/first_name = "Fred" and my_app/contacts/last_name = "Blogs"')
+    
+In the case of the third method you pass in a query that uses FluidDB's 
+uber-minimalist query language (see below).
+
+The result will be a list of instantiations of the model that match the query.
+
+It is important to note, depending on what you query, you might get objects
+that do **not** have the tags defined in the model class. Should you attempt
+to get the value of such non-existent tags an exception will be thrown::
+
+    >>> p = Person(about="foo")
+    >>> p.first_name
+    Traceback (most recent call last):
+    ... 
+    fom.errors.Fluid404Error: <TNoInstanceOnObject (404 Not Found)>
+
+To discover what tags *are* associated with an object you can use the ``tags`` and
+``tag_paths`` attributes to get a list of FOM Tag instances or tag paths respectively::
+
+    >>> p.tags
+    [<fom.mapping.Tag object at 0xb7562fcc>, <fom.mapping.Tag object at 0xb754f7cc>, <fom.mapping.Tag object at 0xb754f44c>]
+    >>> p.tag_paths
+    [u'myapp/contacts/first_name', u'fluiddb/about', u'myapp/contacts/last_name']
+
+You can get at the values of these tags by calling the ``get`` method on the
+object::
+
+    >>> p.get('myapp/contacts/first_name')
+    (u'Fred', 'application/vnd.fluiddb.value+json')
+
+(These tags do **not** have to be defined as fields in the model class)
+
+FluidDB's Query Language
+------------------------
+
+FluidDB provides a simple query language that allows applications to search 
+for objects based on their tags' values. The following kinds of queries are 
+possible: 
+ 
+* **Numeric:** To find objects based on the numeric value of tags. For example, ``tim/rating > 5``. 
+* **Textual:** To find objects based on text matching of their tag values, e.g., ``sally/opinion matches fantastic``. Text matching is done with `Lucene <http://lucene.apache.org/java/docs/>`_, meaning that Lucene matching capabilities and style will be available [#matching]_. 
+* **Presence:** Use ``has`` to request objects that have a given tag. For example, ``has sally/opinion``. 
+* **Set contents:** A tag on an object can hold a set of strings. For example, a tag called ``mary/product-reviews/keywords`` might be on an object with a value of ``[ "cool", "kids", "adventure" ]``. The ``contains`` operator can be used to select objects with a matching value. The query ``mary/product-reviews/keywords contains "kids"`` would match the object in this example.  
+* **Exclusion:** You can exclude objects with the ``except`` keyword. For example ``has nytimes.com/appeared except has james/seen``. The ``except`` operator performs a set difference. 
+* **Logic:** Query components can be combined with ``and`` and ``or``. For example, ``has sara/rating and tim/rating > 5``. 
+* **Grouping:** Parentheses can be used to group query components. For example, ``has sara/rating and (tim/rating > 5 or mike/rating > 7)``.
+
+That's it!
+
+Query result limits
+-------------------
+
+The main current limit is that queries may only return up to 1 million
+objects.  If a query generates more than this, an error status is returned.
+If you need a higher limit, please `email us <info@fluidinfo.com>`_.
+
+Notes
+-----
+
+.. [#matching] Text matching has not been implemented for the launch of the FluidDB private alpha. Expect it soon.  
