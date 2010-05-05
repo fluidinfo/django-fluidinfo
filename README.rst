@@ -10,13 +10,13 @@ Bridging Django to FluidDB with FOM
 -----------------------------------
 
 The purpose of this package is to make it easy to use 
-`FOM <http://bitbucket.org/aafshar/fom-main/wiki/Home`_ to define models for
+`FOM <http://bitbucket.org/aafshar/fom-main/wiki/Home>`_ to define models for
 Django based applications that need to make use of 
 `FluidDb <http://fluidinfo.com>`_ as their database backend (instead of a
 traditional relational database). 
 
 To read the full documentation make sure you have
-`Sphinx <http://sphinx.pocoo.org/>` installed, change to the doc directory and
+`Sphinx <http://sphinx.pocoo.org/>`_ installed, change to the doc directory and
 type::
 
         make html
