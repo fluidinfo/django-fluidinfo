@@ -4,14 +4,14 @@ Objects and tag_values (aliased as Models and *Fields)
 
 I've attempted to keep things as similar to what is found in django.forms.
 
-To use the forms you should first define a model that inherits from 
+To use the forms you should first define a model that inherits from
 django_fluiddb.models.Model. Then, in forms.py:
 
-import django_fluiddb.forms
+from django_fluidd.forms import ModelForm
 
-class MyFluidDBModelForm(forms.ModelForm):
+class MyFluidDBModelForm(ModelForm):
     class Meta:
-        model = MyFluidDBModelClass 
+        model = MyFluidDBModelClass
 
 In fact, since the django_fluiddb.forms.ModelForm class inherits from Django's
 BaseForm class you can bespoke it like the regular ModelForm class.
@@ -35,7 +35,7 @@ FORM_TYPES = {
 def save_instance(form, instance, fields=None, fail_message='saved',
                   commit=True, exclude=None):
     """
-    Iterates through the fields and saves them as tag-values against the 
+    Iterates through the fields and saves them as tag-values against the
     instance object representing an object in FluidDB
     """
     if form.errors:
@@ -62,7 +62,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     fields will be included in the returned dict
 
     "exclude" is an optional list of field names. If provided, the name fields
-    will be excluded from the returned dict, even if they are listed in the 
+    will be excluded from the returned dict, even if they are listed in the
     "fields" argument.
     """
     data = {}
@@ -82,7 +82,7 @@ def model_to_dict(instance, fields=None, exclude=None):
             data[f] = instance.get(instance.fields[f].tagpath)[0]
     return data
 
-def formfield_for_model_field(instance, field_name, 
+def formfield_for_model_field(instance, field_name,
         form_class=forms.FileField, **kwargs):
     """
     Returns the appropriate form field type for a named field in an instance
@@ -113,7 +113,7 @@ def fields_for_model(instance, fields=None, exclude=None, formfield_callback=Non
             continue
         if exclude and not f in exclude:
             continue
-            
+
         formfield = formfield_for_model_field(instance, f)
         if formfield:
             field_list.append((f, formfield))
@@ -121,7 +121,7 @@ def fields_for_model(instance, fields=None, exclude=None, formfield_callback=Non
     field_dict = SortedDict(field_list)
     if fields:
         field_dict = SortedDict(
-            [(f, field_dict.get(f)) for f in fields 
+            [(f, field_dict.get(f)) for f in fields
             if ((not exclude) or (exclude and f not in exclude))]
             )
     return field_dict
@@ -154,7 +154,7 @@ class ModelFormMetaclass(type):
         if opts.model:
             # if model is defined then extract the fields from the associated FOM Object
             fields = fields_for_model(opts.model, opts.fields, opts.exclude, formfield_callback)
-            # override default FOM Object's fields with any custom declared ones 
+            # override default FOM Object's fields with any custom declared ones
             fields.update(declared_fields)
         new_class.declared_fields = declared_fields
         new_class.base_fields = fields
@@ -165,7 +165,7 @@ class BaseModelForm(BaseForm):
     All django-fluiddb model forms inherit capabilities from this class
     """
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
-                 initial=None, error_class=ErrorList, label_suffix=':', 
+                 initial=None, error_class=ErrorList, label_suffix=':',
                  empty_permitted=True, instance=None):
         opts = self._meta
         if instance is None:
@@ -178,7 +178,7 @@ class BaseModelForm(BaseForm):
         # if initial is provided then override values from the instance
         if initial is not None:
             object_data.update(initial)
-        super(BaseModelForm, self).__init__(data, files, auto_id, prefix, object_data, 
+        super(BaseModelForm, self).__init__(data, files, auto_id, prefix, object_data,
                                          error_class, label_suffix, empty_permitted)
 
     def save(self, commit=True):

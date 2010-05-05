@@ -62,7 +62,7 @@ class ModelTest(unittest.TestCase):
 
     def test_create_object_with_model(self):
         """
-        Make sure we can create a new FluidDB object based upon the 
+        Make sure we can create a new FluidDB object based upon the
         template provided by the model class
         """
         m = Meeting(about="django_fluiddb test object")
@@ -82,7 +82,7 @@ class ModelTest(unittest.TestCase):
         Just like Django we provide fields types (but these map to FluidDB's
         primitive types).
 
-        Although we don't enforce the "type" that can be set against these 
+        Although we don't enforce the "type" that can be set against these
         fields (I feel this runs against the grain of FluidDB's dynamic nature)
         it is used by the forms classes to work out how to display the field
         (i.e. which of Django's widget to use)

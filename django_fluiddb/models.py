@@ -1,5 +1,5 @@
 """
-Wraps and inherits from Ali Afshar's FOM classes so they appear more 
+Wraps and inherits from Ali Afshar's FOM classes so they appear more
 Django-esque.
 
 Djangonaughts are used to defining models like this:
@@ -12,13 +12,13 @@ class foo(models.Model):
 
 I'm aiming for something familiar like this:
 
-from django_fluiddb import models 
+from django_fluiddb import models
 
 class foo(models.Model):
     bar = models.TagField('test/namespace/bar_tag')
-    baz = models.TagField('test/namespace/baz_tag') 
+    baz = models.TagField('test/namespace/baz_tag')
 
-The "name" of the field on the forms will be the name of the attribute, the 
+The "name" of the field on the forms will be the name of the attribute, the
 help_text will be the referenced tag's "description" from within FluidDB (to be
 implemented).
 
@@ -31,7 +31,7 @@ class FooForm(ModelForm):
     class Meta:
         model = Foo
 
-Yeah, I know this doesn't reflect the dynamic nature of FluidDB's schema *but* 
+Yeah, I know this doesn't reflect the dynamic nature of FluidDB's schema *but*
 my aim is to give Djangonaughts a familiar "no brainer" route to using FluidDB.
 
 I expect them to dig into FOM once they grok what FluidDB is about. ;-)
@@ -39,7 +39,7 @@ I expect them to dig into FOM once they grok what FluidDB is about. ;-)
 try:
     from fom.mapping import Object, tag_value
 except ImportError:
-    raise "FOM must be in your Python path. See http://bitbucket.org/aafshar/fom-main/wiki/Home for more information"
+    raise ImportError("FOM must be in your Python path. See http://bitbucket.org/aafshar/fom-main/wiki/Home for more information")
 
 class ModelBase(type):
     """
@@ -63,9 +63,9 @@ class ModelBase(type):
         ordered_fields.reverse()
 
         # dictionary of tag names : tag values
-        attrs['fields'] = fields 
+        attrs['fields'] = fields
         # ordered list of the fields - in order they're declared in code
-        attrs['ordered_fields'] = ordered_fields 
+        attrs['ordered_fields'] = ordered_fields
 
         # Create the new class
         new_class = super_new(cls, name, bases, attrs)
@@ -88,7 +88,7 @@ class TagField(tag_value):
     """
     @property
     def field_type(self):
-        # Default 
+        # Default
         return str
 
 class CharField(tag_value):
