@@ -50,8 +50,6 @@ I expect them to dig into FOM once they grok what FluidDB is about. ;-)
 
 Comments and feedback most welcome!
 
-<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/FaqyyqWxdcQ&amp;hl=en_US&amp;fs=1?rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/FaqyyqWxdcQ&amp;hl=en_US&amp;fs=1?rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
-
 (An introductory presentation can be 
 `found here <http://www.slideshare.net/ntoll/an-introduction-to-fluiddb-a-social-database-in-the-cloud>`_)
 
