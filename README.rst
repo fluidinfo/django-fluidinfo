@@ -21,6 +21,10 @@ type::
 
         make html
 
+Alternatively, you can view the documentation online here:
+
+`http://packages.python.org/django-fluidinfo/ <http://packages.python.org/django-fluidinfo/>`_
+
 How..?
 -------
 
