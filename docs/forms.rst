@@ -2,7 +2,7 @@
 Forms
 =====
 
-As with the models and related classes django-fluiddb attempts to keep things
+As with the models and related classes django-fluidinfo attempts to keep things
 familiar regarding forms from the Django developer's point of view.
 
 Django provides a powerful mechanism to allow developers to map models to forms
@@ -23,27 +23,27 @@ that inherits from ModelForm::
 The new ``BlogCommentForm`` would then contain fields based upon those defined
 in the ``BlogComment`` model class - including appropriate validation.
 
-Forms in django-fluiddb
------------------------
+Forms in djang-fluidinfo
+------------------------
 
-This same functionality has been built into django-fluiddb. Developers should
+This same functionality has been built into django-fluidinfo. Developers should
 add something like the following to their ``forms.py`` module::
 
-    from django_fluiddb.forms import ModelForm
-    from fdb_models.py import Person # taken from the previous models example 
+    from django_fluidinfo.forms import ModelForm
+    from fi_models.py import Person # taken from the previous models example
 
     class PersonForm(ModelForm):
         class Meta:
             model = Person
 
-Notice that the form's class inherits from ``django_fluiddb.forms.ModelForm``.
+Notice that the form's class inherits from ``django_fluidinfo.forms.ModelForm``.
 
-Since django-fluiddb's ModelForm inherits from Django's own BaseForm it is
+Since django-fluidinfo's ModelForm inherits from Django's own BaseForm it is
 possible to bespoke the form in the usual ways::
 
     from django import forms as django_forms
-    from django_fluiddb.forms import ModelForm
-    from fdb_models.py import Person 
+    from django_fluidinfo.forms import ModelForm
+    from fi_models.py import Person
 
     class BespokePersonForm(ModelForm):
         """
@@ -56,7 +56,7 @@ possible to bespoke the form in the usual ways::
             self.fields['first_name'].required = False
 
         class Meta:
-            model = Person 
+            model = Person
 
         def clean_last_name(self):
             """
@@ -87,7 +87,7 @@ like this::
     if f.is_valid():
         f.save()
 
-Notice how this basically matches what one should do with Django's own 
+Notice how this basically matches what one should do with Django's own
 ModelForm class: an instance of the model is created, it is passed into the
 form's __init__ function along with POST data, validated and then saved to
-FluidDB. Simple!
+Fluidinfo. Simple!

@@ -5,23 +5,23 @@ Objects and tag_values (aliased as Models and *Fields)
 I've attempted to keep things as similar to what is found in django.forms.
 
 To use the forms you should first define a model that inherits from
-django_fluiddb.models.Model. Then, in forms.py:
+django_fluidinfo.models.Model. Then, in forms.py:
 
-from django_fluidd.forms import ModelForm
+from django_fluidinfo.forms import ModelForm
 
-class MyFluidDBModelForm(ModelForm):
+class MyFluidinfoModelForm(ModelForm):
     class Meta:
-        model = MyFluidDBModelClass
+        model = MyFluidinfoModelClass
 
-In fact, since the django_fluiddb.forms.ModelForm class inherits from Django's
+In fact, since the django_fluidinfo.forms.ModelForm class inherits from Django's
 BaseForm class you can bespoke it like the regular ModelForm class.
 """
 from django import forms
 from django.utils.datastructures import SortedDict
 from django.forms.forms import BaseForm, get_declared_fields
 from django.forms.util import ErrorList
-
 from fom.errors import Fluid404Error
+
 
 # This dictionary defines how each type should be displayed in a form
 FORM_TYPES = {
@@ -32,11 +32,13 @@ FORM_TYPES = {
     unicode: forms.CharField
 }
 
+
 def save_instance(form, instance, fields=None, fail_message='saved',
                   commit=True, exclude=None):
     """
     Iterates through the fields and saves them as tag-values against the
-    instance object representing an object in FluidDB
+    instance object representing an object in Fluidinfo and then pushes the
+    changes to Fluidinfo.
     """
     if form.errors:
         raise ValueError("The %s could not be %s because the data didn't"\
@@ -50,8 +52,9 @@ def save_instance(form, instance, fields=None, fail_message='saved',
         if exclude and field_name not in exclude:
             continue
         setattr(instance, field_name, cleaned_data[field_name])
-
+    instance.save()
     return instance
+
 
 def model_to_dict(instance, fields=None, exclude=None):
     """
@@ -82,6 +85,7 @@ def model_to_dict(instance, fields=None, exclude=None):
             data[f] = instance.get(instance.fields[f].tagpath)[0]
     return data
 
+
 def formfield_for_model_field(instance, field_name,
         form_class=forms.FileField, **kwargs):
     """
@@ -95,7 +99,9 @@ def formfield_for_model_field(instance, field_name,
     formfield = FormField()
     return formfield
 
-def fields_for_model(instance, fields=None, exclude=None, formfield_callback=None):
+
+def fields_for_model(instance, fields=None, exclude=None,
+    formfield_callback=None):
     """
     Returns a "SortedDict" containing form fields for the given fom_object.
 
@@ -126,6 +132,7 @@ def fields_for_model(instance, fields=None, exclude=None, formfield_callback=Non
             )
     return field_dict
 
+
 class ModelFormOptions(object):
     """
     Basis for the _meta attribute
@@ -134,6 +141,7 @@ class ModelFormOptions(object):
         self.model = getattr(options, 'model', None)
         self.fields = getattr(options, 'fields', None)
         self.exclude = getattr(options, 'exclude', None)
+
 
 class ModelFormMetaclass(type):
     """
@@ -147,22 +155,27 @@ class ModelFormMetaclass(type):
             # defining ModelForm itself
             parents = None
         declared_fields = get_declared_fields(bases, attrs, False)
-        new_class = super(ModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
+        new_class = super(ModelFormMetaclass, cls).__new__(cls, name, bases,
+            attrs)
         if not parents:
             return new_class
-        opts = new_class._meta = ModelFormOptions(getattr(new_class, 'Meta', None))
+        opts = new_class._meta = ModelFormOptions(getattr(new_class, 'Meta',
+            None))
         if opts.model:
-            # if model is defined then extract the fields from the associated FOM Object
-            fields = fields_for_model(opts.model, opts.fields, opts.exclude, formfield_callback)
+            # if model is defined then extract the fields from the associated
+            # FOM Object
+            fields = fields_for_model(opts.model, opts.fields, opts.exclude,
+                formfield_callback)
             # override default FOM Object's fields with any custom declared ones
             fields.update(declared_fields)
         new_class.declared_fields = declared_fields
         new_class.base_fields = fields
         return new_class
 
+
 class BaseModelForm(BaseForm):
     """
-    All django-fluiddb model forms inherit capabilities from this class
+    All django-fluidinfo model forms inherit capabilities from this class
     """
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
                  initial=None, error_class=ErrorList, label_suffix=':',
@@ -178,16 +191,16 @@ class BaseModelForm(BaseForm):
         # if initial is provided then override values from the instance
         if initial is not None:
             object_data.update(initial)
-        super(BaseModelForm, self).__init__(data, files, auto_id, prefix, object_data,
-                                         error_class, label_suffix, empty_permitted)
+        super(BaseModelForm, self).__init__(data, files, auto_id, prefix,
+            object_data, error_class, label_suffix, empty_permitted)
 
     def save(self, commit=True):
         return save_instance(self, self.instance, self._meta.fields, 'saved',
                              commit, exclude=self._meta.exclude)
+
 
 class ModelForm(BaseModelForm):
     """
     All model forms must inherit from this class
     """
     __metaclass__ = ModelFormMetaclass
-
