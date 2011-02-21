@@ -9,13 +9,5 @@ setup(
     url='http://fluidinfo.com/',
     license='LICENSE.txt',
     description='Provides a familiar interface for using Fluidinfo within Django projects',
-    long_description=open('README.rst').read(),
-    classifiers=['Development Status :: 3 - Alpha Development Status',
-                 'Environment :: Web Environment', 
-                 'Framework :: Django',
-                 'Intended Audience :: Developers',
-                 'License :: OSI Approved :: BSD License',
-                 'Operating System :: OS Independent', 
-                 'Programming Language :: Python',
-                 'Topic :: Utilities']
+    long_description=open('README.rst').read()
 )

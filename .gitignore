@@ -2,3 +2,5 @@
 *.swp
 docs/_build/*
 build/*
+MANIFEST
+dist/*
